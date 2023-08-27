@@ -9,6 +9,11 @@
                 <div><a href={{ route('etudiant.create') }} class="btn btn-sm btn-primary">Ajouter un nouvel etudiant</a>
                 </div>
             </div>
+            @if (session()->has('successDelete'))
+                <div class="alert alert-success">
+                    {{ session()->get('successDelete') }}
+                </div>
+            @endif
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -27,8 +32,16 @@
                             <td>{{ $etudiant->prenom }}</td>
                             <td>{{ $etudiant->classe->libelle }}</td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-info">Editer</a>
-                                <a href="#" class="btn btn-sm btn-danger">Supprimer</a>
+                                <a href="{{ route('etudiant.edit', ['etudiant' => $etudiant->id]) }}"
+                                    class="btn btn-sm btn-info">Editer</a>
+                                <a href="#" class="btn btn-danger"
+                                    onclick="if(confirm ('Voulez-vous vraiment supprimer cet étudiant?')){document.getElementById('form-{{ $etudiant->id }}').submit() }">Supprimer</a>
+                                <form id="form-{{ $etudiant->id }}"
+                                    action="{{ route('etudiant.supprimer', ['etudiant' => $etudiant->id]) }}"
+                                    method="post">
+                                    @csrf
+                                    <input type="hidden" name="_method" value="delete">
+                                </form>
                             </td>
                         </tr>
                     @endforeach

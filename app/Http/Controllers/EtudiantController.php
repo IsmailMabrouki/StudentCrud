@@ -39,4 +39,31 @@ class EtudiantController extends Controller
         return back()->with("success","Etudiant Ajouté avec succè !");
         return redirect()->route("etudiant");
     }
+
+    public function edit(Etudiant $etudiant){
+        $classes = Classe::all();
+        return view('editEtudiant', compact("etudiant","classes"));
+
+    }
+
+    public function delete(Etudiant $etudiant){
+        $nom_complet = $etudiant->nom ." ". $etudiant->prenom;
+        $etudiant->delete();
+        return back()->with("successDelete","Etudiant '$nom_complet' Supprimé avec succè !");
+    }
+
+    public function update(Request $request, Etudiant $etudiant){
+        $request->validate([
+            "nom" => "required",
+            "prenom" => "required",
+            "classe_id" => "required"
+        ]);
+
+        $etudiant->update([
+            "nom" => $request->nom,
+            "prenom" => $request->prenom,
+            "classe_id" => $request->classe_id
+        ]);
+        return back()->with("successUpdate","Etudiant Modifié avec succè !");
+    }
 }
